@@ -1,0 +1,25 @@
+{
+  "name": "careerquest-web",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "db:seed": "node scripts/generate-seed.mjs",
+    "build:fn": "node scripts/build-function.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.21.5",
+    "vite": "^5.4.11"
+  }
+}
