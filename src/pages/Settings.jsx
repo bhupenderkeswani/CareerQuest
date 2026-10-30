@@ -5,6 +5,7 @@ import { clearEvents, readEvents } from '../lib/analytics';
 import { isConfigured, configProblem } from '../lib/supabase';
 import { useContent, refreshContent } from '../content/content';
 import { agoShort } from '../lib/freshness';
+import { consentAllowsSync, hasUnsaved, signOutAccount } from '../lib/account';
 import { TopBar } from '../components/TopBar';
 
 export function downloadExport(data) {
@@ -25,7 +26,7 @@ export default function Settings() {
   const notif = useStore((s) => s.notif);
   const setNotif = useStore((s) => s.setNotif);
   const exportData = useStore((s) => s.exportData);
-  const signOut = useStore((s) => s.signOut);
+  const [confirmOut, setConfirmOut] = useState(false);
   const simOffline = useStore((s) => s.ui.simOffline);
   const setSimOffline = useStore((s) => s.setSimOffline);
   const pushToast = useStore((s) => s.pushToast);
@@ -69,7 +70,7 @@ export default function Settings() {
             <details style={{ padding: '14px 0' }}>
               <summary style={{ cursor: 'pointer' }}>About this prototype</summary>
               <p className="small muted" style={{ marginTop: 8 }}>
-                This is a working prototype of CareerQuest Phase 2. Sign-in, guardian consent, the recommendation step and the daily data refresh are simulated on your device. Career figures, sources and roadmaps are illustrative samples and must be replaced with reviewed data before launch.
+                This is a working prototype of CareerQuest Phase 2. Guest mode keeps everything on this device; signing in with Google saves your progress to your account. See Me, “About the data”, for when the career figures were last checked.
               </p>
             </details>
           </li>
@@ -81,7 +82,26 @@ export default function Settings() {
               </p>
             </details>
           </li>
-          {user && <li><button className="listbtn" onClick={() => { signOut(); nav('/welcome'); }}><span>Sign out</span></button></li>}
+          {user && (
+            <li>
+              {!confirmOut ? (
+                <button className="listbtn" onClick={async () => {
+                  // Saved progress lives in the account, so signing out is safe. Unsaved progress would be lost: ask first.
+                  if (!hasUnsaved()) { await signOutAccount(); nav('/welcome'); } else setConfirmOut(true);
+                }}><span>Sign out</span></button>
+              ) : (
+                <div className="stack" style={{ padding: '12px 0' }}>
+                  <p className="small">{consentAllowsSync(user)
+                    ? 'Your latest progress has not finished saving to your account. Signing out now removes it from this device.'
+                    : 'Your progress is not saved to your account yet (waiting for your guardian). Signing out removes it from this device.'}</p>
+                  <div className="row wrap">
+                    <button className="btn sm danger" onClick={async () => { await signOutAccount(); nav('/welcome'); }}>Sign out anyway</button>
+                    <button className="btn sm" onClick={() => setConfirmOut(false)}>Stay signed in</button>
+                  </div>
+                </div>
+              )}
+            </li>
+          )}
         </ul>
       </section>
 

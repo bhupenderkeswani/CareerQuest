@@ -1,10 +1,17 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../store';
 import { BADGES } from '../lib/badges';
-import { CLASS_STAGES, DAILY_CAP, levelInfo } from '../lib/config';
-import { today } from '../lib/freshness';
+import { CLASS_STAGES, DAILY_CAP, DATA_REVIEWED, DATA_REVIEW_STALE_DAYS, levelInfo } from '../lib/config';
+import { ageDays, fmtDate, today } from '../lib/freshness';
 import { CAREER_MAP } from '../data/careers';
 import { useSynced } from './Shortlist';
+import { hasUnsaved, refreshProfile, requestGuardianLink, useAuth } from '../lib/account';
+
+const SYNC_LABEL = {
+  idle: '✓ Signed in', saving: 'Saving…', saved: '✓ Saved to your account', offline: 'Offline: will save when you are back',
+  error: 'Could not save yet. Will retry', blocked: 'Waiting for guardian',
+};
 
 // S17: profile with XP, level, today's progress, badges and account status.
 export default function Me() {
@@ -14,7 +21,10 @@ export default function Me() {
   const badges = useStore((s) => s.badges);
   const quiz = useStore((s) => s.quiz);
   const progress = useStore((s) => s.progress);
-  const approve = useStore((s) => s.approveGuardian);
+  const sync = useAuth((s) => s.sync);
+  const [newLink, setNewLink] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
   const synced = useSynced();
   const lvl = levelInfo(xp);
   const todayXp = daily.date === today() ? daily.xp : 0;
@@ -74,16 +84,30 @@ export default function Me() {
         {user && (
           <li className="listbtn" style={{ cursor: 'default' }}>
             <span>Account status</span>
-            <span>{pending ? '⏳ Waiting for guardian' : synced ? '✓ Synced' : 'Signed in'}</span>
+            <span>{pending ? '⏳ Waiting for guardian' : synced ? (sync === 'saved' && hasUnsaved() ? SYNC_LABEL.saving : SYNC_LABEL[sync]) || '✓ Signed in' : 'Signed in'}</span>
           </li>
         )}
       </ul>
 
       {pending && (
         <div className="card soft stack">
-          <p className="small">Until your guardian says OK, you keep guest-level features and your progress stays on this device.</p>
-          {user.consent === 'required' && <Link className="btn sm" to="/guardian">Send my guardian a link</Link>}
-          <button className="btn sm" onClick={approve}>Demo: simulate guardian approval</button>
+          <p className="small">Until your guardian says OK, your progress stays on this device and is saved to your account once they approve.</p>
+          {!newLink ? (
+            <>
+              <button className="btn sm" disabled={busy} onClick={async () => { setBusy(true); try { setNewLink(await requestGuardianLink()); } catch { /* the Guardian page shows errors */ } setBusy(false); }}>
+                {user.consent === 'required' ? 'Get a link for my guardian' : 'Get a new link (replaces the old one)'}
+              </button>
+              <button className="linkbtn" onClick={() => refreshProfile().catch(() => {})}>Check if my guardian has approved</button>
+            </>
+          ) : (
+            <>
+              <input className="field-input" readOnly value={newLink} aria-label="Link for your guardian" onFocus={(e) => e.target.select()} />
+              <div className="row wrap">
+                <a className="btn sm primary" href={`https://wa.me/?text=${encodeURIComponent(`Please open this link to approve my CareerQuest account: ${newLink}`)}`} target="_blank" rel="noreferrer">Share on WhatsApp</a>
+                <button className="btn sm" onClick={async () => { try { await navigator.clipboard.writeText(newLink); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* ignore */ } }}>{copied ? 'Copied ✓' : 'Copy link'}</button>
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -94,6 +118,19 @@ export default function Me() {
           <Link to="/welcome" className="btn primary block">Sign up or log in</Link>
         </div>
       )}
+
+      <section className="card flat stack" aria-labelledby="about-data">
+        <h2 id="about-data">About the data</h2>
+        <p className="small">
+          Entry salaries and entry exams were checked against public sources on <strong>{fmtDate(DATA_REVIEWED)}</strong>
+          (mainly Payscale India, ICAI, NTA and IIT Bombay). Study length, costs, demand, growth-path pay and roadmap steps are
+          editorial estimates for now. Tap ⓘ beside any figure to see its source.
+        </p>
+        {ageDays(DATA_REVIEWED) > DATA_REVIEW_STALE_DAYS && (
+          <p className="small"><span className="tag warn">⚠ Due a re-check</span> Some figures may have changed since then. Confirm exams and fees with the official site before you decide.</p>
+        )}
+        <p className="small muted">Pay figures are typical ranges for new joiners in India, not promises. Pay never decides what we suggest to you.</p>
+      </section>
 
       <p className="small center"><Link to="/admin">Reviewer queue (internal)</Link></p>
     </div>

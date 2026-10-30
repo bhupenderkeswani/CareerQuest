@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { useStore, useOnline } from '../store';
 import { ROADMAPS, findStep, visibleSteps } from '../data/roadmaps';
-import { fmtDuration, fmtMoney, ageLabel, isStale } from '../lib/freshness';
+import { fmtDuration, fmtMoney } from '../lib/freshness';
 import { XP_RULES } from '../lib/config';
 import { TopBar } from '../components/TopBar';
 
@@ -47,8 +47,7 @@ export default function Step() {
           <div className="grow">
             <div className="lbl-s">Source</div>
             <div className="meta">
-              <span>{step.source} · updated {ageLabel(step.updated)}</span>
-              {isStale(step.updated) && <span className="tag warn">⚠ May be outdated</span>}
+              <span>{step.source}</span>
             </div>
           </div>
           <button className="infobtn" aria-label="Source and freshness for this step"

@@ -5,7 +5,8 @@ import { persist } from 'zustand/middleware';
 import { useEffect, useMemo, useState } from 'react';
 import { CAREER_MAP, TOP_SALARY_IDS } from './data/careers';
 import { SEED_QUEUE } from './data/admin';
-import { CLASS_STAGES, DAILY_CAP, XP_RULES, levelInfo } from './lib/config';
+import { DAILY_CAP, XP_RULES, levelInfo } from './lib/config';
+import { SYNC_KEYS } from './lib/sync';
 import { BADGES } from './lib/badges';
 import { track } from './lib/analytics';
 import { today } from './lib/freshness';
@@ -14,8 +15,8 @@ const freshDaily = (date = today()) => ({ date, xp: 0, counts: {}, keys: {}, cap
 
 const freshData = () => ({
   entered: false,
-  user: null,
-  pendingAuth: null,
+  user: null,       // the signed-in student's profile (from the server); null for guests
+  syncMeta: null,   // { userId, rev, base }: the copy last agreed with the server, for three-way merging
   xp: 0,
   daily: freshDaily(),
   once: {},
@@ -144,36 +145,15 @@ export const useStore = create(
 
         // ---------- onboarding & account (US10, US19)
         enterGuest: () => { set({ entered: true }); track('guest_continue'); },
-        startAuth: (method) => { set({ pendingAuth: method }); track('auth_start', { method }); },
-        createUser: ({ nickname, classStage, state, dob }) => {
-          const stage = CLASS_STAGES.find((c) => c.id === classStage);
-          let minor = stage.minor;
-          if (minor === null) minor = dob ? (Date.now() - new Date(dob).getTime()) / 31557600000 < 18 : true;
-          set((s) => ({
-            entered: true,
-            user: {
-              id: `u_${Math.random().toString(36).slice(2, 9)}`,
-              authMethod: s.pendingAuth || 'phone',
-              nickname: nickname.trim(),
-              classStage,
-              state: state || '',
-              minor,
-              consent: minor ? 'required' : 'not_required',
-              guardianHint: '',
-              createdAt: Date.now(),
-            },
-            startStage: classStage === 'c11' ? 0 : classStage === 'college' ? 2 : 1,
-          }));
-          track('auth_success', { method: get().pendingAuth || 'phone' });
-          return minor;
-        },
-        sendGuardianLink: (phone) => {
-          set((s) => ({ user: { ...s.user, consent: 'pending', guardianHint: `•••••${phone.slice(-2)}` } }));
-          track('guardian_consent_sent');
-        },
-        approveGuardian: () => {
-          set((s) => ({ user: { ...s.user, consent: 'approved' } }));
-          track('guardian_consent_approved');
+        // The signed-in student's profile. Accounts come from Google sign-in (see lib/account.js).
+        setAccount: (user) => set(user ? { user, entered: true } : { user: null }),
+        setSyncMeta: (syncMeta) => set({ syncMeta }),
+        // Take a merged copy from the server (or a merge of both). Missing parts fall back to fresh defaults.
+        applyDoc: (doc) => {
+          const f = freshData();
+          const patch = Object.fromEntries(SYNC_KEYS.map((k) => [k, doc[k] ?? f[k]]));
+          patch.stats = { ...f.stats, ...(doc.stats || {}) };
+          set(patch);
         },
         hasGuestData: () => {
           const s = get();
@@ -184,7 +164,11 @@ export const useStore = create(
           const f = freshData();
           set(Object.fromEntries(progressKeys.map((k) => [k, f[k]])));
         },
-        signOut: () => set({ user: null, entered: false, pendingAuth: null }),
+        // Sign-out takes the student's progress off this device: it lives in their account.
+        clearAccount: () => {
+          const f = freshData();
+          set({ user: null, entered: false, syncMeta: null, ...Object.fromEntries([...progressKeys, 'notif', 'startStage', 'activePath'].map((k) => [k, f[k]])) });
+        },
         exportData: () => {
           const s = get();
           const out = { exportedAt: new Date().toISOString(), note: 'Prototype export: all data from this device.' };

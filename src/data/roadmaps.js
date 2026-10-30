@@ -2,6 +2,7 @@
 // A step's `at` is the stage where it happens (0 = Class 11, 1 = Class 12, 2 = college onward).
 // A student starting at stage N sees steps with at >= N. Cost is in thousands of rupees.
 import { daysAgo } from '../lib/freshness';
+import { UNVERIFIED_SOURCE } from './verified';
 
 export const STAGES = [
   { id: 'c11', label: 'Class 11' },
@@ -9,7 +10,7 @@ export const STAGES = [
   { id: 'college', label: 'In college' },
 ];
 
-const SRC = 'Course and exam notices (sample)';
+const SRC = UNVERIFIED_SOURCE;
 const num = (v) => (Array.isArray(v) ? v : [v, v]);
 const DEFAULT_TODO = ['Check the official notice for dates, fees and documents', 'Note the eligibility rules before you register'];
 

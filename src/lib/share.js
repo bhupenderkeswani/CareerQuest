@@ -1,6 +1,7 @@
 // "Share a card as an image" (Phase 1 WhatsApp sharing). Draws a card to a canvas and hands it
 // to the share sheet; falls back to a PNG download where file sharing is unavailable.
-import { ageLabel } from './freshness';
+import { fmtDate } from './freshness';
+import { DATA_REVIEWED } from './config';
 
 function wrap(ctx, text, x, y, maxW, lineH) {
   const words = text.split(' ');
@@ -38,7 +39,7 @@ export async function renderCardImage(role) {
   for (const key of ['salary', 'exam', 'study']) {
     const fld = role.fields[key];
     ctx.font = '600 32px system-ui, sans-serif'; ctx.fillStyle = '#5d6678';
-    ctx.fillText(`${fld.label} · updated ${ageLabel(fld.updated)}`, 130, y);
+    ctx.fillText(fld.label, 130, y);
     ctx.font = '600 42px system-ui, sans-serif'; ctx.fillStyle = '#1d2433';
     y = wrap(ctx, fld.value, 130, y + 52, W - 260, 52) + 22;
   }
@@ -47,6 +48,8 @@ export async function renderCardImage(role) {
   ctx.fillText('🧭 CareerQuest', W / 2, 1230);
   ctx.font = '400 32px system-ui, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.85)';
   ctx.fillText('See what careers are really like.', W / 2, 1285);
+  ctx.font = '400 26px system-ui, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText(`Figures checked ${fmtDate(DATA_REVIEWED)}`, W / 2, 1335);
 
   return new Promise((res) => c.toBlob(res, 'image/png'));
 }

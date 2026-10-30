@@ -1,15 +1,11 @@
-// Curated role data. ILLUSTRATIVE SAMPLE FOR THE PROTOTYPE: every figure must be replaced with
-// reviewed, sourced data before launch. Each field carries its own source and last_updated (US17).
+// Curated role data. Salary and entry-exam figures listed in ./verified.js were checked against named public
+// sources in a one-time review; every other figure is an editorial estimate and says so. Each field carries its
+// own source and last_updated (US17); the app shows one review date to students (Me > About the data).
 import { daysAgo } from '../lib/freshness';
+import { REVIEWED_ON, UNVERIFIED_SOURCE, VERIFIED } from './verified';
 
 const f = (label, value, source, days) => ({ label, value, source, updated: daysAgo(days) });
-const SRC = {
-  pay: 'Salary survey (sample)',
-  exam: 'Official exam notice (sample)',
-  study: 'College prospectus (sample)',
-  cost: 'Fee structures (sample)',
-  demand: 'Hiring trends report (sample)',
-};
+const SRC = { pay: UNVERIFIED_SOURCE, exam: UNVERIFIED_SOURCE, study: UNVERIFIED_SOURCE, cost: UNVERIFIED_SOURCE, demand: UNVERIFIED_SOURCE };
 
 // tags drive the rule-based matcher:
 //   subjects/style/interests: overlap with quiz answers
@@ -557,6 +553,18 @@ const SUBS = [
     [['10:00', 'Plan this week’s posts with the designer.'], ['13:00', 'Reply to comments and sort out a complaint.'], ['16:00', 'See which post worked and why.']],
     'You are online most of the day, and bad days on social media can feel personal.'),
 ];
+
+// Apply the reviewed figures. Dates are the review date, and the sample change histories are dropped: no real
+// change has been recorded yet.
+const reviewedAt = new Date(REVIEWED_ON).toISOString();
+for (const c of [...BASE, ...SUBS]) {
+  for (const k of ['salary', 'exam']) {
+    const v = VERIFIED[c.id]?.[k];
+    if (v) { c.fields[k].value = v[0]; c.fields[k].source = v[1]; }
+  }
+  for (const k of Object.keys(c.fields)) c.fields[k].updated = reviewedAt;
+  c.changeLog = [];
+}
 
 export const CAREERS = [...BASE, ...SUBS];
 export const TOP_LEVEL = BASE;

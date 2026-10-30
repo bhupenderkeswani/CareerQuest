@@ -6,8 +6,9 @@
 // really fork (for example specialist vs people leadership), like alternate roadmap paths.
 import { daysAgo } from '../lib/freshness';
 import { CAREER_MAP } from './careers';
+import { UNVERIFIED_SOURCE } from './verified';
 
-const SRC = 'Salary survey (sample)';
+const SRC = UNVERIFIED_SOURCE;
 const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 // L(title, when, pay, ageInDays, does, skills[], moveUp)

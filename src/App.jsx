@@ -1,12 +1,13 @@
 import { Fragment, useEffect } from 'react';
-import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from './store';
 import { useContent, initContent, refreshContent } from './content/content';
 import { syncReports } from './lib/reports';
+import { initAuth, syncNow } from './lib/account';
 import { Shell } from './components/Shell';
 import { Overlays } from './components/Overlays';
 import Welcome from './pages/Welcome';
-import Auth from './pages/Auth';
+import ConsentApprove from './pages/ConsentApprove';
 import AboutYou from './pages/AboutYou';
 import Guardian from './pages/Guardian';
 import Merge from './pages/Merge';
@@ -54,13 +55,16 @@ function Splash() {
 function Boot({ children }) {
   const loading = useContent((s) => s.loading);
   const version = useContent((s) => s.version);
+  const navigate = useNavigate();
   useEffect(() => {
     initContent().then(syncReports);
-    const again = () => { refreshContent(); syncReports(); };
+    let stopAuth = () => {};
+    initAuth(navigate).then((stop) => { stopAuth = stop; });
+    const again = () => { refreshContent(); syncReports(); syncNow(); };
     const onVisible = () => { if (document.visibilityState === 'visible') again(); };
     window.addEventListener('online', again);
     document.addEventListener('visibilitychange', onVisible);
-    return () => { window.removeEventListener('online', again); document.removeEventListener('visibilitychange', onVisible); };
+    return () => { stopAuth(); window.removeEventListener('online', again); document.removeEventListener('visibilitychange', onVisible); };
   }, []);
   if (loading) return <Splash />;
   // New content remounts the screens once; identical content never does.
@@ -74,7 +78,7 @@ export default function App() {
       <Boot>
       <Routes>
         <Route path="/welcome" element={<Welcome />} />
-        <Route path="/auth" element={<Auth />} />
+        <Route path="/consent/:token" element={<ConsentApprove />} />
         <Route path="/about" element={<AboutYou />} />
         <Route path="/guardian" element={<Guardian />} />
         <Route path="/merge" element={<Merge />} />

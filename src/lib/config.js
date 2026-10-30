@@ -1,6 +1,8 @@
 // Single source of truth for XP rules, the daily cap and level thresholds (spec 5.2).
 // Rebalance here only; nothing else hardcodes these numbers.
 
+import { REVIEWED_ON } from '../data/verified';
+
 export const DAILY_CAP = 150;
 
 // lifetime: each key earns XP once, ever.   dailyLimit: max awards per day.
@@ -36,6 +38,11 @@ export function levelInfo(xp) {
   const pct = next ? Math.round(((xp - cur.at) / (next.at - cur.at)) * 100) : 100;
   return { ...cur, next, pct, toNext: next ? next.at - xp : 0 };
 }
+
+// The one date shown in Me ("About the data"). Bump it only after the figures have actually been re-checked
+// against their sources; the per-field dates in the content tables are for reviewers, not shown to students.
+export const DATA_REVIEWED = REVIEWED_ON;
+export const DATA_REVIEW_STALE_DAYS = 180; // past this, Me says the figures are due a re-check
 
 export const FIELDS = {
   tech: { id: 'tech', label: 'Tech', emoji: '💻' },

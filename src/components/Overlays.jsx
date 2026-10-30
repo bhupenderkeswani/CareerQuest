@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useStore, useRole } from '../store';
 import { Sheet } from './Sheet';
 import { BADGE_MAP, badgeProgress } from '../lib/badges';
-import { LEVELS, DAILY_CAP } from '../lib/config';
-import { fmtDate, isStale } from '../lib/freshness';
+import { LEVELS, DAILY_CAP, DATA_REVIEWED } from '../lib/config';
+import { fmtDate } from '../lib/freshness';
 import { syncReports } from '../lib/reports';
+import { UNVERIFIED_SOURCE } from '../data/verified';
 
 function Toast({ t }) {
   const dismiss = useStore((s) => s.dismissToast);
@@ -88,15 +89,12 @@ function GuestPrompt({ kind }) {
   );
 }
 
-// S21: source, last updated, status and change history for one field.
+// S21: the source for one figure. The date is the app-wide "figures checked" date (see Me > About the data).
 function InfoSheet({ info }) {
   const close = useStore((s) => s.closeInfo);
   const openReport = useStore((s) => s.openReport);
   const role = useRole(info.roleId);
-  const [showHistory, setShowHistory] = useState(false);
   const fld = info.fieldKey ? role.fields[info.fieldKey] : info.custom;
-  const stale = isStale(fld.updated);
-  const history = info.fieldKey ? role.changeLog.filter((c) => c.field === info.fieldKey) : [];
   const label = fld.label || fld.title;
   return (
     <Sheet onClose={close} label={`${label}: source and freshness`}>
@@ -107,29 +105,9 @@ function InfoSheet({ info }) {
           <div><strong>{fld.value}</strong></div>
           <div className="small muted" style={{ marginTop: 10 }}>Source</div>
           <div>{fld.source}</div>
-          <div className="small muted" style={{ marginTop: 10 }}>Last updated</div>
-          <div>{fmtDate(fld.updated)}</div>
-          <div className="small muted" style={{ marginTop: 10 }}>Status</div>
-          <div>{stale ? <span className="tag warn">⚠ May be outdated (over 90 days)</span> : <span className="tag good">✓ Current</span>}</div>
+          <div className="small muted" style={{ marginTop: 10 }}>Checked</div>
+          <div>{fld.source === UNVERIFIED_SOURCE ? <span className="tag warn">Not checked against a source yet</span> : fmtDate(DATA_REVIEWED)}</div>
         </div>
-        {info.fieldKey && (
-          <div>
-            <button className="linkbtn" onClick={() => setShowHistory((v) => !v)} aria-expanded={showHistory}>
-              {showHistory ? 'Hide change history' : 'View change history'}
-            </button>
-            {showHistory && (
-              <ul className="list" style={{ marginTop: 8 }}>
-                {history.length === 0 && <li className="small muted" style={{ padding: '8px 0' }}>No changes recorded since this field was added.</li>}
-                {history.map((h, i) => (
-                  <li key={i} className="small" style={{ padding: '8px 0' }}>
-                    <strong>{fmtDate(h.date)}</strong>: {h.from} → {h.to}
-                    <div className="muted">Source: {h.source}</div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
         <button className="btn block" onClick={() => openReport({ roleId: info.roleId, field: label })}>Report an error</button>
       </div>
     </Sheet>

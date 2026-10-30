@@ -4,14 +4,12 @@ import { useStore, useRole } from '../store';
 import { CAREER_MAP } from '../data/careers';
 import { hasRoadmap } from '../data/roadmaps';
 import { ladderFor, sharedLevels } from '../data/ladders';
-import { ageLabel, isStale } from '../lib/freshness';
 import { track } from '../lib/analytics';
 import { TopBar } from '../components/TopBar';
 
 function Level({ role, level, index, open, onToggle }) {
   const openInfo = useStore((s) => s.openInfo);
   const openFieldInfo = useStore((s) => s.openFieldInfo);
-  const stale = isStale(level.pay.updated);
   return (
     <li className="step">
       <span className="node" aria-hidden="true">{index + 1}</span>
@@ -29,10 +27,6 @@ function Level({ role, level, index, open, onToggle }) {
               <div className="grow">
                 <div className="lbl-s">{level.pay.label}</div>
                 <div className="val">{level.pay.value}</div>
-                <div className="meta">
-                  <span>Updated {ageLabel(level.pay.updated)}</span>
-                  {stale && <span className="tag warn">⚠ May be outdated</span>}
-                </div>
               </div>
               <button
                 className="infobtn"
@@ -123,7 +117,7 @@ export default function Ladder() {
         ]).filter(Boolean)}
       </ol>
 
-      <p className="proto-note">Prototype data: illustrative samples, not for real decisions.</p>
+      <p className="proto-note">Pay at each level is an editorial estimate, not a checked figure. Confirm before you decide.</p>
     </div>
   );
 }

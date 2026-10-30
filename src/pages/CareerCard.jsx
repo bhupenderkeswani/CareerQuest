@@ -207,7 +207,7 @@ export default function CareerCard() {
         )}
       </div>
       <button className="linkbtn" style={{ alignSelf: 'center' }} onClick={() => openReport({ roleId: id, field: role.fields.salary.label })}>Report an error</button>
-      <p className="proto-note">Prototype data: illustrative samples, not for real decisions.</p>
+      <p className="proto-note">Entry salaries and exams are checked against public sources; other figures are estimates. Confirm on official sites before you decide.</p>
     </div>
   );
 }

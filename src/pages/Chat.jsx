@@ -184,7 +184,7 @@ export default function Chat() {
             </div>
           </form>
           {messages.length > 0 && <button className="linkbtn" style={{ alignSelf: 'center' }} onClick={clearChat}>Clear conversation</button>}
-          <p className="proto-note">Suggestions use only the careers on CareerQuest. Prototype data: illustrative samples.</p>
+          <p className="proto-note">Suggestions use only the careers on CareerQuest. Entry salaries and exams are checked against public sources; other figures are estimates.</p>
         </>
       )}
     </div>

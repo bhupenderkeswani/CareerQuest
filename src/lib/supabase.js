@@ -36,9 +36,10 @@ if (usable) {
 
 export const isConfigured = usable;
 
-// Students use the public key only. The session is persisted just for the reviewer sign-in.
+// The public key only. A session exists for signed-in students and for reviewers.
 export const supabase = usable
   ? createClient(url, key, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: 'cq-reviewer-auth' },
+      // PKCE puts ?code= in the query string on the way back from Google, which works with hash routes.
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce', storageKey: 'cq-auth' },
     })
   : null;

@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useStore, useRole } from '../store';
 import { CAREER_MAP } from '../data/careers';
 import { ROADMAPS, STAGES, pathTotals, visibleSteps } from '../data/roadmaps';
-import { fmtDuration, fmtMoney, ageLabel, isStale } from '../lib/freshness';
+import { fmtDuration, fmtMoney } from '../lib/freshness';
 import { track } from '../lib/analytics';
 import { hasLadder, ladderChain } from '../data/ladders';
 import { TopBar } from '../components/TopBar';
@@ -83,7 +83,6 @@ export default function Roadmap() {
               <Link className="card" to={`/roadmap/${id}/step/${s.id}`} aria-label={`${s.title}${isDone ? ', done' : ''}`}>
                 <strong>{s.title}</strong>
                 <div className="small muted">{stepMeta(s)}</div>
-                <div className="small muted">Source · {ageLabel(s.updated)} {isStale(s.updated) && <span className="tag warn">May be outdated</span>}</div>
               </Link>
             </li>
           );
