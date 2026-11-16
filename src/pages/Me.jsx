@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../store';
 import { BADGES } from '../lib/badges';
-import { CLASS_STAGES, DAILY_CAP, DATA_REVIEWED, DATA_REVIEW_STALE_DAYS, levelInfo } from '../lib/config';
+import { CLASS_STAGES, DAILY_CAP, DATA_REVIEWED, DATA_REVIEWED_THROUGH, DATA_REVIEW_STALE_DAYS, FEATURES, levelInfo } from '../lib/config';
 import { ageDays, fmtDate, today } from '../lib/freshness';
 import { CAREER_MAP } from '../data/careers';
 import { useSynced } from './Shortlist';
@@ -41,11 +41,12 @@ export default function Me() {
       <div className="row spread">
         <div>
           <h1>{user ? user.nickname : 'Guest'}</h1>
-          <p className="small muted">{user ? stage : 'Not signed in'}</p>
+          <p className="small muted">{user ? stage : FEATURES.accounts ? 'Not signed in' : 'Saved on this device only'}</p>
         </div>
         <Link to="/settings" className="iconbtn" aria-label="Settings">⚙</Link>
       </div>
 
+      {FEATURES.rewards && (
       <div className="card stack">
         <div className="row spread">
           <h2>Level {lvl.n} · {lvl.name}</h2>
@@ -57,7 +58,9 @@ export default function Me() {
         </div>
         <p className="small">Today: <strong>{todayXp} / {DAILY_CAP} XP</strong></p>
       </div>
+      )}
 
+      {FEATURES.rewards && (
       <section aria-labelledby="bdg">
         <div className="sectionhead">
           <h2 id="bdg">Badges ({unlocked.length}/{BADGES.length})</h2>
@@ -72,16 +75,19 @@ export default function Me() {
           ))}
         </div>
       </section>
+      )}
 
       <ul className="list card">
         <li><Link className="listbtn" to="/quiz"><span>Quiz: {quiz.completedAt ? 'done' : Object.keys(quiz.answers).length ? 'in progress' : 'not started'}</span><span className="linkbtn">{quiz.completedAt ? 'Edit' : 'Open'}</span></Link></li>
+        {FEATURES.roadmaps && (
         <li>
           <Link className="listbtn" to="/roadmaps">
             <span>My roadmaps ({active.length})</span>
             <span className="small muted">{active.map((id) => CAREER_MAP[id]?.emoji).join(' ')}</span>
           </Link>
         </li>
-        {user && (
+        )}
+        {FEATURES.accounts && user && (
           <li className="listbtn" style={{ cursor: 'default' }}>
             <span>Account status</span>
             <span>{pending ? '⏳ Waiting for guardian' : synced ? (sync === 'saved' && hasUnsaved() ? SYNC_LABEL.saving : SYNC_LABEL[sync]) || '✓ Signed in' : 'Signed in'}</span>
@@ -89,7 +95,7 @@ export default function Me() {
         )}
       </ul>
 
-      {pending && (
+      {FEATURES.accounts && pending && (
         <div className="card soft stack">
           <p className="small">Until your guardian says OK, your progress stays on this device and is saved to your account once they approve.</p>
           {!newLink ? (
@@ -111,7 +117,7 @@ export default function Me() {
         </div>
       )}
 
-      {!user && (
+      {FEATURES.accounts && !user && (
         <div className="card soft stack">
           <strong>Keep your progress</strong>
           <p className="small">Create an account to sync your shortlist, XP and badges across devices.</p>
@@ -122,9 +128,9 @@ export default function Me() {
       <section className="card flat stack" aria-labelledby="about-data">
         <h2 id="about-data">About the data</h2>
         <p className="small">
-          Entry salaries and entry exams were checked against public sources on <strong>{fmtDate(DATA_REVIEWED)}</strong>
-          (mainly Payscale India, ICAI, NTA and IIT Bombay). Study length, costs, demand, growth-path pay and roadmap steps are
-          editorial estimates for now. Tap ⓘ beside any figure to see its source.
+          Entry salaries and entry exams were checked against public sources between <strong>{fmtDate(DATA_REVIEWED)}</strong> and <strong>{fmtDate(DATA_REVIEWED_THROUGH)}</strong>
+          (mainly Payscale India, ICAI, NTA and IIT Bombay), and so were study length, cost or demand for the main roles. Everything
+          else, including growth-path pay, is an editorial estimate for now and says so. Tap ⓘ beside any figure to see its source.
         </p>
         {ageDays(DATA_REVIEWED) > DATA_REVIEW_STALE_DAYS && (
           <p className="small"><span className="tag warn">⚠ Due a re-check</span> Some figures may have changed since then. Confirm exams and fees with the official site before you decide.</p>

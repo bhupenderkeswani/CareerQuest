@@ -70,7 +70,7 @@ export default function Settings() {
             <details style={{ padding: '14px 0' }}>
               <summary style={{ cursor: 'pointer' }}>About this prototype</summary>
               <p className="small muted" style={{ marginTop: 8 }}>
-                This is a working prototype of CareerQuest Phase 2. Guest mode keeps everything on this device; signing in with Google saves your progress to your account. See Me, “About the data”, for when the career figures were last checked.
+                This is a working prototype of CareerQuest. It does three things: a quiz that suggests roles worth exploring, Compare, and Side Quests that show where a role can lead. Everything stays on this device. See Me, “About the data”, for when the career figures were last checked.
               </p>
             </details>
           </li>
@@ -78,7 +78,7 @@ export default function Settings() {
             <details style={{ padding: '14px 0' }}>
               <summary style={{ cursor: 'pointer' }}>Help</summary>
               <p className="small muted" style={{ marginTop: 8 }}>
-                Spot a wrong number? Tap ⓘ beside it, then “Report an error”. Rewards come from reading and finishing steps, not from clicking, and XP is capped each day.
+                Spot a wrong number? Tap ⓘ beside it, then “Report an error”. Your quiz answers and shortlist stay on this device.
               </p>
             </details>
           </li>

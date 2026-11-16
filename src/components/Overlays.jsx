@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useStore, useRole } from '../store';
 import { Sheet } from './Sheet';
 import { BADGE_MAP, badgeProgress } from '../lib/badges';
-import { LEVELS, DAILY_CAP, DATA_REVIEWED } from '../lib/config';
+import { LEVELS, DAILY_CAP, DATA_REVIEWED, DATA_REVIEWED_THROUGH } from '../lib/config';
 import { fmtDate } from '../lib/freshness';
 import { syncReports } from '../lib/reports';
 import { UNVERIFIED_SOURCE } from '../data/verified';
@@ -106,7 +106,7 @@ function InfoSheet({ info }) {
           <div className="small muted" style={{ marginTop: 10 }}>Source</div>
           <div>{fld.source}</div>
           <div className="small muted" style={{ marginTop: 10 }}>Checked</div>
-          <div>{fld.source === UNVERIFIED_SOURCE ? <span className="tag warn">Not checked against a source yet</span> : fmtDate(DATA_REVIEWED)}</div>
+          <div>{fld.source === UNVERIFIED_SOURCE ? <span className="tag warn">Not checked against a source yet</span> : `${fmtDate(DATA_REVIEWED)} to ${fmtDate(DATA_REVIEWED_THROUGH)}`}</div>
         </div>
         <button className="btn block" onClick={() => openReport({ roleId: info.roleId, field: label })}>Report an error</button>
       </div>

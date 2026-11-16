@@ -4,6 +4,7 @@ import { useStore } from './store';
 import { useContent, initContent, refreshContent } from './content/content';
 import { syncReports } from './lib/reports';
 import { initAuth, syncNow } from './lib/account';
+import { FEATURES } from './lib/config';
 import { Shell } from './components/Shell';
 import { Overlays } from './components/Overlays';
 import Welcome from './pages/Welcome';
@@ -59,8 +60,8 @@ function Boot({ children }) {
   useEffect(() => {
     initContent().then(syncReports);
     let stopAuth = () => {};
-    initAuth(navigate).then((stop) => { stopAuth = stop; });
-    const again = () => { refreshContent(); syncReports(); syncNow(); };
+    if (FEATURES.accounts) initAuth(navigate).then((stop) => { stopAuth = stop; });
+    const again = () => { refreshContent(); syncReports(); if (FEATURES.accounts) syncNow(); };
     const onVisible = () => { if (document.visibilityState === 'visible') again(); };
     window.addEventListener('online', again);
     document.addEventListener('visibilitychange', onVisible);
@@ -78,27 +79,27 @@ export default function App() {
       <Boot>
       <Routes>
         <Route path="/welcome" element={<Welcome />} />
-        <Route path="/consent/:token" element={<ConsentApprove />} />
-        <Route path="/about" element={<AboutYou />} />
-        <Route path="/guardian" element={<Guardian />} />
-        <Route path="/merge" element={<Merge />} />
+        {FEATURES.accounts && <Route path="/consent/:token" element={<ConsentApprove />} />}
+        {FEATURES.accounts && <Route path="/about" element={<AboutYou />} />}
+        {FEATURES.accounts && <Route path="/guardian" element={<Guardian />} />}
+        {FEATURES.accounts && <Route path="/merge" element={<Merge />} />}
         <Route path="/admin" element={<Admin />} />
 
         <Route element={<Gate><Shell /></Gate>}>
           <Route index element={<Explore />} />
           <Route path="career/:id" element={<CareerCard />} />
-          <Route path="chat" element={<Chat />} />
-          <Route path="career/:id/ladder" element={<Ladder />} />
+          {FEATURES.chat && <Route path="chat" element={<Chat />} />}
+          {FEATURES.ladders && <Route path="career/:id/ladder" element={<Ladder />} />}
           <Route path="compare" element={<Compare />} />
           <Route path="foryou" element={<ForYou />} />
           <Route path="quiz" element={<QuizIntro />} />
           <Route path="quiz/run" element={<QuizRun />} />
-          <Route path="roadmaps" element={<Roadmaps />} />
-          <Route path="roadmap/:id" element={<Roadmap />} />
-          <Route path="roadmap/:id/step/:stepId" element={<Step />} />
+          {FEATURES.roadmaps && <Route path="roadmaps" element={<Roadmaps />} />}
+          {FEATURES.roadmaps && <Route path="roadmap/:id" element={<Roadmap />} />}
+          {FEATURES.roadmaps && <Route path="roadmap/:id/step/:stepId" element={<Step />} />}
           <Route path="shortlist" element={<Shortlist />} />
           <Route path="me" element={<Me />} />
-          <Route path="me/badges" element={<Badges />} />
+          {FEATURES.rewards && <Route path="me/badges" element={<Badges />} />}
           <Route path="settings" element={<Settings />} />
           <Route path="settings/delete" element={<DeleteAccount />} />
           <Route path="*" element={<Navigate to="/" replace />} />

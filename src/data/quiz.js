@@ -1,8 +1,22 @@
-// Interest quiz (US14). 9 questions, ~3 minutes. No caste, religion, gender or family income.
+// Interest quiz (US14). 13 questions, ~4 minutes. No caste, religion, gender or family income.
 // `quizMeta.version` is stored with each student's answers so old answers stay interpretable.
-export const quizMeta = { version: 1 };
+// Version 2 (Nov 2026) adds what the student interviews pointed to: a role they already have in mind, what they have
+// already tried (interests were found by doing), how sure they are of their stream, and who has influenced them.
+import { TOP_LEVEL } from './careers';
+
+export const quizMeta = { version: 2 };
 
 export const QUESTIONS = [
+  {
+    id: 'aspiration', type: 'multi', max: 2, optional: true,
+    title: 'Is there a career you already have in mind?',
+    help: 'Pick up to 2. It is fine to say you are not sure. Anything you pick will show up in your results, with an honest look at how it fits.',
+    options: [
+      ...TOP_LEVEL.map((r) => ({ v: r.id, label: r.name })),
+      { v: 'unlisted', label: 'Something that is not on this list' },
+      { v: 'unsure', label: 'I am not sure yet', exclusive: true },
+    ],
+  },
   {
     id: 'subjects', type: 'multi',
     title: 'Which school subjects do you enjoy?', help: 'Pick as many as you like.',
@@ -35,6 +49,20 @@ export const QUESTIONS = [
       { v: 'design', label: 'Design and media' },
       { v: 'puzzles', label: 'Solving puzzles' },
       { v: 'health', label: 'Health and the body' },
+    ],
+  },
+  {
+    id: 'tried', type: 'multi', optional: true,
+    title: 'Have you already tried any of these?',
+    help: 'Trying something once often shows what you like. Pick any that apply.',
+    options: [
+      { v: 'code', label: 'Coding, or using computers beyond class' },
+      { v: 'accounts', label: 'Keeping accounts, or helping in a business' },
+      { v: 'teach', label: 'Teaching or coaching someone' },
+      { v: 'sport', label: 'Training, sport, chess or fitness' },
+      { v: 'make', label: 'Designing, drawing, editing or making content' },
+      { v: 'lab', label: 'Experiments or practicals I enjoyed' },
+      { v: 'none', label: 'None of these yet', exclusive: true },
     ],
   },
   {
@@ -93,6 +121,31 @@ export const QUESTIONS = [
       { v: 'desk', label: 'Desk-based work' },
       { v: 'clinical', label: 'Working with patients or blood' },
       { v: 'maths', label: 'Heavy maths' },
+    ],
+  },
+  {
+    id: 'stream_fit', type: 'single', optional: true,
+    title: 'How do you feel about your current stream or subjects?',
+    help: 'If you are not sure, we will also show you roles from outside your stream.',
+    options: [
+      { v: 'sure', label: 'Happy with them' },
+      { v: 'unsure', label: 'Not sure they are right for me' },
+      { v: 'struggling', label: 'I am finding them hard' },
+      { v: 'choosing', label: 'I have not chosen yet' },
+    ],
+  },
+  {
+    id: 'influence', type: 'multi', max: 2, optional: true,
+    title: 'Who or what has influenced your choices the most so far?',
+    help: 'Optional. This does not change your results. It helps us see where students get their advice.',
+    options: [
+      { v: 'myself', label: 'Mostly me' },
+      { v: 'parents', label: 'Parents or family' },
+      { v: 'relatives', label: 'Relatives or neighbours' },
+      { v: 'teachers', label: 'Teachers or a counsellor' },
+      { v: 'friends', label: 'Classmates and friends' },
+      { v: 'online', label: 'The internet or AI tools' },
+      { v: 'marks', label: 'My marks' },
     ],
   },
 ];

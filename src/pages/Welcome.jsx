@@ -4,6 +4,9 @@ import { useStore } from '../store';
 import { isConfigured } from '../lib/supabase';
 import { signInWithGoogle } from '../lib/account';
 import { track } from '../lib/analytics';
+import { FEATURES } from '../lib/config';
+
+const canSignIn = FEATURES.accounts && isConfigured;
 
 // The standard multicolour Google "G" (Google's branding rules ask for it on sign-in buttons).
 function GoogleG() {
@@ -42,7 +45,7 @@ export default function Welcome() {
         <h1 className="hero-title">See what careers are really like. Then find your way there.</h1>
       </div>
       <div className="stack">
-        {isConfigured && (
+        {canSignIn && (
           <>
             <button className="btn primary block" onClick={google} disabled={busy}><GoogleG /> {busy ? 'Opening Google…' : 'Continue with Google'}</button>
             {error && <div className="err center" role="alert">{error}</div>}
@@ -51,11 +54,11 @@ export default function Welcome() {
         )}
         <button className="btn block" onClick={() => { enterGuest(); nav('/'); }}>Explore as guest</button>
         <p className="small muted center">
-          {isConfigured
+          {canSignIn
             ? 'An account saves your progress across devices. Guests can do everything except that.'
-            : 'Guests can do everything. Accounts need the server connection, which is not set up in this build.'}
+            : 'No sign-up needed. Your quiz answers and shortlist stay on this device.'}
         </p>
-        {isConfigured && <p className="small muted center">Under 18? You can sign in too. A parent or guardian just needs to say OK before your progress is saved to the account.</p>}
+        {canSignIn && <p className="small muted center">Under 18? You can sign in too. A parent or guardian just needs to say OK before your progress is saved to the account.</p>}
         {entered && <p className="center"><Link to="/">Back to exploring</Link></p>}
       </div>
       <p className="proto-note">Prototype: entry salaries and exams are checked against public sources; other figures are estimates.</p>

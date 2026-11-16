@@ -35,8 +35,12 @@ export default function QuizRun() {
   const pick = (v) => {
     setAnswers((a) => {
       if (q.type === 'single') return { ...a, [q.id]: v };
-      const cur = a[q.id] || [];
-      if (cur.includes(v)) return { ...a, [q.id]: cur.filter((x) => x !== v) };
+      const exclusive = (q.options.find((o) => o.v === v) || {}).exclusive;
+      const exclusives = q.options.filter((o) => o.exclusive).map((o) => o.v);
+      // "Not sure" and "None of these" stand alone: picking one clears the rest, and picking anything else clears it.
+      const cur = (a[q.id] || []).filter((x) => !exclusives.includes(x) || x === v);
+      if (a[q.id]?.includes(v)) return { ...a, [q.id]: cur.filter((x) => x !== v) };
+      if (exclusive) return { ...a, [q.id]: [v] };
       if (q.max && cur.length >= q.max) return { ...a, [q.id]: [...cur.slice(1), v] };
       return { ...a, [q.id]: [...cur, v] };
     });

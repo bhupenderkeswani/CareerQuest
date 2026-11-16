@@ -168,6 +168,7 @@ const BASE = [
       { to: 'physio', carries: 'Patient care and anatomy' },
       { to: 'pharmacist', carries: 'Medicine knowledge' },
       { to: 'doctor', carries: 'Clinical experience (further exams needed)' },
+      { to: 'dietitian', carries: 'Health science and patient care' },
     ],
     changeLog: [],
   },
@@ -193,6 +194,8 @@ const BASE = [
       { to: 'nurse', carries: 'Patient care' },
       { to: 'doctor', carries: 'Anatomy (further exams needed)' },
       { to: 'pharmacist', carries: 'Medicine basics' },
+      { to: 'fitness-trainer', carries: 'Body movement and fitness' },
+      { to: 'dietitian', carries: 'Health science and patient care' },
     ],
     changeLog: [],
   },
@@ -243,6 +246,8 @@ const BASE = [
       { to: 'financial-analyst', carries: 'Accounting and audit' },
       { to: 'data-analyst', carries: 'Excel and analysis' },
       { to: 'hr-manager', carries: 'Payroll and compliance' },
+      { to: 'company-secretary', carries: 'Company law and compliance' },
+      { to: 'accountant', carries: 'Accounting and audit' },
     ],
     changeLog: [{ date: daysAgo(40), field: 'exam', from: 'CA Foundation (older rules)', to: 'CA Foundation', source: SRC.exam }],
   },
@@ -293,6 +298,7 @@ const BASE = [
       { to: 'data-analyst', carries: 'Excel and statistics' },
       { to: 'ca', carries: 'Accounting (extra exams needed)' },
       { to: 'digital-marketer', carries: 'Market research and reporting' },
+      { to: 'accountant', carries: 'Accounting and Excel' },
     ],
     changeLog: [],
   },
@@ -318,6 +324,7 @@ const BASE = [
       { to: 'digital-marketer', carries: 'Communication and employer branding' },
       { to: 'financial-analyst', carries: 'Compensation and budgeting' },
       { to: 'ca', carries: 'Payroll and compliance (extra exams needed)' },
+      { to: 'lawyer', carries: 'Labour law and employment contracts' },
     ],
     changeLog: [],
   },
@@ -419,6 +426,153 @@ const BASE = [
       { to: 'software-dev', carries: 'Coding and understanding how software breaks' },
       { to: 'cyber-analyst', carries: 'Finding weak spots in systems' },
       { to: 'product-manager', carries: 'Knowing what users notice' },
+    ],
+    changeLog: [],
+  },
+
+  // ---------- roles added after the student interviews (Nov 2026) ----------
+  // Figures that were sourced are in ./verified.js; anything else here is an editorial estimate and says so.
+  {
+    id: 'company-secretary', name: 'Company Secretary', field: 'business', emoji: '📋', hue: 25,
+    tagline: 'Keeps a company on the right side of the rules, and runs its board paperwork.',
+    tags: { subjects: ['commerce', 'languages'], style: ['people', 'data'], interests: ['business', 'puzzles'], exams: 1, years: 1, cost: 0, reloc: 0, flags: ['desk'] },
+    fields: fx(
+      ['₹3–5 LPA (newly qualified)', 30],
+      ['CSEET after Class 12; graduates skip it and start at CS Executive', 30],
+      ['About 3 to 5 years including practical training', 30],
+      ['About ₹50k in ICSI fees, plus coaching', 30],
+      ['Growing', 30],
+    ),
+    dailyQuest: [
+      ['10:00', 'Check that the company’s yearly filings are ready before the deadline.'],
+      ['13:00', 'Prepare the notes and papers for tomorrow’s board meeting.'],
+      ['16:00', 'Explain a new rule to the directors in plain words.'],
+    ],
+    check: 'Training is part of the course, and pay during it is lower than a qualified CS earns.',
+    sideQuests: [
+      { to: 'ca', carries: 'Accounting and compliance' },
+      { to: 'lawyer', carries: 'Company law and contracts' },
+      { to: 'financial-analyst', carries: 'Reading company accounts' },
+    ],
+    changeLog: [],
+  },
+  {
+    id: 'lawyer', name: 'Lawyer', field: 'business', emoji: '⚖️', hue: 235,
+    tagline: 'Argues cases, drafts contracts and advises people on their rights.',
+    tags: { subjects: ['social', 'languages'], style: ['people'], interests: ['helping', 'business', 'puzzles'], exams: 2, years: 1, cost: 2, reloc: 1, flags: ['exams'] },
+    fields: fx(
+      ['₹1–8 LPA for most new graduates', 30],
+      ['CLAT or similar for the 5-year LLB after Class 12; the Bar exam to practise', 30],
+      ['5 years after Class 12, or 3 years after a degree', 30],
+      ['Up to ₹22 L at top law schools; lower elsewhere', 30],
+      ['Steady', 30],
+    ),
+    dailyQuest: [
+      ['10:00', 'Read a client’s contract and mark the risky clauses.'],
+      ['12:00', 'Research an earlier court decision that helps your case.'],
+      ['15:00', 'Appear in a hearing, or draft the notice to send.'],
+    ],
+    check: 'Pay varies hugely: new graduates in court chambers can earn very little, while top law-school and firm hires earn far more.',
+    sideQuests: [
+      { to: 'company-secretary', carries: 'Company law and contracts' },
+      { to: 'hr-manager', carries: 'Labour law and employment contracts' },
+      { to: 'financial-analyst', carries: 'Reading contracts and company accounts' },
+    ],
+    changeLog: [],
+  },
+  {
+    id: 'accountant', name: 'Accountant', field: 'business', emoji: '🧾', hue: 150,
+    tagline: 'Records and checks a business’s money so the books are right.',
+    tags: { subjects: ['commerce', 'maths'], style: ['data'], interests: ['business'], exams: 0, years: 0, cost: 0, reloc: 0, flags: ['desk'] },
+    fields: fx(
+      ['₹2–3.5 LPA', 30],
+      ['None. Tally, GST and Excel skills are what employers ask for', 30],
+      ['3-year B.Com is the usual route', 30],
+      ['₹30k–2 L in total', 30],
+      ['Steady', 30],
+    ),
+    dailyQuest: [
+      ['10:00', 'Enter the day’s bills and receipts in Tally.'],
+      ['13:00', 'Match the bank statement to the books and chase the difference.'],
+      ['16:00', 'File the monthly GST return before the due date.'],
+    ],
+    check: 'Entry pay is modest, and Tally and GST skills decide who gets hired. CA is a separate, longer route.',
+    sideQuests: [
+      { to: 'ca', carries: 'Accounting and audit' },
+      { to: 'financial-analyst', carries: 'Accounting and Excel' },
+      { to: 'company-secretary', carries: 'Records and compliance' },
+    ],
+    changeLog: [],
+  },
+  {
+    id: 'dietitian', name: 'Dietitian / Nutritionist', field: 'health', emoji: '🥗', hue: 100,
+    tagline: 'Plans food that helps people stay well or manage a health condition.',
+    tags: { subjects: ['science'], style: ['people', 'data'], interests: ['health', 'helping'], exams: 1, years: 1, cost: 1, reloc: 1, flags: [] },
+    fields: fx(
+      ['₹2–3.5 LPA', 30],
+      ['No national entrance exam. A Registered Dietitian needs a postgraduate qualification and an internship', 30],
+      ['B.Sc in Food and Nutrition (3 to 4 years); about 6 years to Registered Dietitian', 30],
+      ['₹1–9 L for the B.Sc, from government to private', 30],
+      ['Growing', 30],
+    ),
+    dailyQuest: [
+      ['10:00', 'Talk to a patient about what they eat in a normal week.'],
+      ['13:00', 'Plan a seven-day meal chart for someone with high sugar.'],
+      ['16:00', 'Check how a client’s weight and energy have changed.'],
+    ],
+    check: '“Nutritionist” is not a protected title, and short online courses vary a lot. A Registered Dietitian needs a postgraduate qualification.',
+    sideQuests: [
+      { to: 'fitness-trainer', carries: 'Nutrition and exercise' },
+      { to: 'physio', carries: 'Anatomy and health science' },
+      { to: 'nurse', carries: 'Patient care and health science' },
+    ],
+    changeLog: [],
+  },
+  {
+    id: 'fitness-trainer', name: 'Fitness Trainer', field: 'health', emoji: '🏋️', hue: 12,
+    tagline: 'Coaches people to get stronger and fitter, in a gym or one to one.',
+    tags: { subjects: ['science'], style: ['people', 'hands'], interests: ['health', 'helping'], exams: 0, years: 0, cost: 0, reloc: 0, flags: [] },
+    fields: fx(
+      ['₹1.5–3.5 LPA', 30],
+      ['None. A recognised fitness certificate is the usual route', 30],
+      ['A certificate course of about 450 hours; a B.P.Ed degree is optional', 30],
+      ['About ₹8k a year to register, plus course fees', 30],
+      ['Growing', 30],
+    ),
+    dailyQuest: [
+      ['6:00', 'Open the gym and take the first group warm-up.'],
+      ['11:00', 'Build a four-week plan for a new client.'],
+      ['18:00', 'Correct a client’s squat before they hurt their back.'],
+    ],
+    check: 'Pay at small gyms is low and fixed. Higher income comes from clients, which takes time to build.',
+    sideQuests: [
+      { to: 'dietitian', carries: 'Nutrition and exercise' },
+      { to: 'physio', carries: 'Body movement and fitness' },
+      { to: 'sports-coach', carries: 'Coaching and motivating people' },
+    ],
+    changeLog: [],
+  },
+  {
+    id: 'sports-coach', name: 'Chess or Sports Coach', field: 'health', emoji: '♟️', hue: 270,
+    tagline: 'Teaches a game or sport, one student or a whole academy at a time.',
+    tags: { subjects: ['maths'], style: ['people'], interests: ['puzzles', 'helping', 'health'], exams: 0, years: 0, cost: 0, reloc: 0, flags: [] },
+    fields: fx(
+      ['About ₹500–1,000 a session at the start; income depends on how many students you have', 30],
+      ['None to start. FIDE coach titles and the NIS diploma are optional', 30],
+      ['No degree needed for chess; the NIS sports-coaching diploma is 1 year', 30],
+      ['A FIDE seminar costs up to about €350; the NIS diploma ₹63,800', 30],
+      ['Growing', 30],
+    ),
+    dailyQuest: [
+      ['16:00', 'Go through a student’s lost game and find the move where it turned.'],
+      ['17:30', 'Run a group class for beginners.'],
+      ['19:00', 'Talk to a parent about how their child is improving.'],
+    ],
+    check: 'Income is irregular, and your rating and titles decide your fees. The NIS diploma needs a sports record.',
+    sideQuests: [
+      { to: 'fitness-trainer', carries: 'Coaching and motivating people' },
+      { to: 'hr-manager', carries: 'Training and developing people' },
+      { to: 'digital-marketer', carries: 'Building an audience online' },
     ],
     changeLog: [],
   },
@@ -558,7 +712,7 @@ const SUBS = [
 // change has been recorded yet.
 const reviewedAt = new Date(REVIEWED_ON).toISOString();
 for (const c of [...BASE, ...SUBS]) {
-  for (const k of ['salary', 'exam']) {
+  for (const k of ['salary', 'exam', 'study', 'cost', 'demand']) {
     const v = VERIFIED[c.id]?.[k];
     if (v) { c.fields[k].value = v[0]; c.fields[k].source = v[1]; }
   }

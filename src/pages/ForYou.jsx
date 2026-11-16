@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStore, useRoles } from '../store';
 import { QUESTIONS } from '../data/quiz';
+import { FEATURES } from '../lib/config';
 import { track } from '../lib/analytics';
 import { CHILDREN } from '../data/careers';
 
@@ -20,6 +21,7 @@ function RecCard({ rec, role }) {
         <div className="grow">
           <h2>{role.emoji} {role.name}</h2>
           <div className="row wrap" style={{ gap: 6, marginTop: 4 }}>
+            {rec.mentioned && <span className="tag good">⭐ You mentioned this</span>}
             {rec.outside && <span className="tag brand">🔀 Outside your stream</span>}
           </div>
         </div>
@@ -68,14 +70,16 @@ export default function ForYou() {
         <div className="card soft stack">
           <div style={{ fontSize: '2.4rem' }} aria-hidden="true">🎯</div>
           <h2>{started ? `Continue quiz (Q${quiz.step + 1})` : 'Roles worth exploring'}</h2>
-          <p>{started ? 'Your answers are saved. Pick up where you left off.' : `Answer ${QUESTIONS.length} quick questions and get 3–5 roles with reasons. About 3 minutes.`}</p>
+          <p>{started ? 'Your answers are saved. Pick up where you left off.' : `Answer ${QUESTIONS.length} quick questions and get 3–5 roles with reasons. About 4 minutes.`}</p>
           <Link to={started ? '/quiz/run' : '/quiz'} className="btn primary block">{started ? 'Continue' : 'Take the quiz'}</Link>
         </div>
-        <Link to="/chat" className="card row" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <span style={{ fontSize: '1.5rem' }} aria-hidden="true">💬</span>
-          <span className="grow"><strong>Or just tell us what you want</strong><span className="small muted" style={{ display: 'block' }}>Say it in your own words and get roles with links</span></span>
-          <span aria-hidden="true">→</span>
-        </Link>
+        {FEATURES.chat && (
+          <Link to="/chat" className="card row" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <span style={{ fontSize: '1.5rem' }} aria-hidden="true">💬</span>
+            <span className="grow"><strong>Or just tell us what you want</strong><span className="small muted" style={{ display: 'block' }}>Say it in your own words and get roles with links</span></span>
+            <span aria-hidden="true">→</span>
+          </Link>
+        )}
         <p className="small muted">Prefer to browse? <Link to="/">Explore all careers</Link>.</p>
       </div>
     );
@@ -87,6 +91,12 @@ export default function ForYou() {
         <h1>Roles worth exploring</h1>
         <p className="muted">Based on your answers. These are ideas to look into, not a verdict.</p>
       </div>
+      {(quiz.answers.aspiration || []).includes('unlisted') && (
+        <div className="card soft" role="note">
+          <strong>You mentioned a career we do not cover yet.</strong>
+          <p className="small">We cannot show it here, so these are the closest roles to what you like. Use Compare to see how they differ.</p>
+        </div>
+      )}
       {recs.map((rec) => {
         const role = roles.find((r) => r.id === rec.roleId);
         return role ? <RecCard key={rec.roleId} rec={rec} role={role} /> : null;
@@ -94,7 +104,7 @@ export default function ForYou() {
       <div className="row wrap center" style={{ justifyContent: 'center', gap: 18 }}>
         <Link to="/quiz/run">Edit my answers</Link>
         <Link to="/quiz">Retake</Link>
-        <Link to="/chat">Ask in your own words</Link>
+        {FEATURES.chat && <Link to="/chat">Ask in your own words</Link>}
       </div>
       <p className="proto-note">Picks use only the figures on our career cards.</p>
     </div>

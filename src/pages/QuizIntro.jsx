@@ -4,7 +4,7 @@ import { QUESTIONS } from '../data/quiz';
 import { track } from '../lib/analytics';
 import { TopBar } from '../components/TopBar';
 
-// S10: sets the 3-minute expectation and states what the quiz never uses.
+// S10: sets the 4-minute expectation and states what the quiz never uses.
 export default function QuizIntro() {
   const nav = useNavigate();
   const quiz = useStore((s) => s.quiz);
@@ -24,7 +24,7 @@ export default function QuizIntro() {
       <div className="stack">
         <div className="hero-mark" aria-hidden="true" style={{ textAlign: 'left' }}>🎯</div>
         <h1>Find roles worth exploring</h1>
-        <p>{QUESTIONS.length} questions · about 3 minutes. There are no right answers.</p>
+        <p>{QUESTIONS.length} questions · about 4 minutes. There are no right answers.</p>
         <div className="card soft">
           <strong>What we never use</strong>
           <p className="small">Caste, religion, gender or family income. We ask about what you like and what feels comfortable.</p>

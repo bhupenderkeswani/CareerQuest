@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useStore, useOnline } from '../store';
 import { agoShort } from '../lib/freshness';
+import { FEATURES } from '../lib/config';
 
-const TABS = [
+const ALL_TABS = [
   { to: '/', label: 'Explore', ico: '🧭', end: true },
   { to: '/foryou', label: 'For You', ico: '✨' },
-  { to: '/roadmaps', label: 'Roadmaps', ico: '🗺️' },
+  { to: '/roadmaps', label: 'Roadmaps', ico: '🗺️', needs: 'roadmaps' },
   { to: '/shortlist', label: 'Shortlist', ico: '⭐' },
   { to: '/me', label: 'Me', ico: '👤' },
 ];
+const TABS = ALL_TABS.filter((t) => !t.needs || FEATURES[t.needs]);
 
 // S23: offline and sync states. Opened content keeps working; quiz results and sharing need a
 // connection (those screens say so where it matters). Changes made offline queue and sync later.

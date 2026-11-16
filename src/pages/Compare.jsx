@@ -5,6 +5,7 @@ import { CAREERS, CHILDREN, FIELD_KEYS, TOP_LEVEL } from '../data/careers';
 import { FieldCell } from '../components/FieldRow';
 import { TopBar } from '../components/TopBar';
 import { ladderChain } from '../data/ladders';
+import { FEATURES } from '../lib/config';
 
 // S8: side-by-side compare. Rows are fixed and columns follow the order you picked:
 // nothing is sorted or highlighted by pay.
@@ -61,7 +62,7 @@ export default function Compare() {
                 {roles.map((r) => (
                   <td key={r.id}>
                     <div>{ladderChain(r.id, 4) || 'Coming soon'}</div>
-                    {ladderChain(r.id) && <Link className="small" to={`/career/${r.id}/ladder`}>Open ladder</Link>}
+                    {FEATURES.ladders && ladderChain(r.id) && <Link className="small" to={`/career/${r.id}/ladder`}>Open ladder</Link>}
                   </td>
                 ))}
               </tr>

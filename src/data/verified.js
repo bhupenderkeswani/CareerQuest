@@ -7,7 +7,8 @@
 // Exam facts come from the official body where it could be opened (UCEED, NTA) and are marked when only a
 // news or coaching page was available.
 
-export const REVIEWED_ON = '2026-10-30';
+export const REVIEWED_ON = '2026-10-30'; // first review: the original 40 roles
+export const REVIEWED_THROUGH = '2026-11-16'; // latest review: six roles added after the student interviews
 export const UNVERIFIED_SOURCE = 'Editorial estimate (not yet checked against a published source)';
 
 const PS = (title, avg, n) => `Payscale India, ${title}: entry-level average ${avg} (${n} salaries), checked Oct 2026`;
@@ -63,4 +64,79 @@ export const VERIFIED = {
   'seo-specialist': { salary: ['₹2–4.5 LPA', 'Payscale India, SEO Specialist: entry-level average ₹2.0 L, average base ₹3.5 L, checked Oct 2026'] },
   'social-media-manager': { salary: ['₹2.5–5 LPA', 'Payscale India, Social Media Manager: entry-level average ₹2.4 L, 1–4 years ₹3.5 L, checked Oct 2026'] },
   'graphic-designer': { salary: ['₹2.5–6 LPA', 'Payscale India, Graphic Designer: entry-level average ₹2.4 L, 1–4 years ₹3.5 L, checked Oct 2026'], exam: ['Optional design entrance (for example NID DAT, NIFT)', 'NID DAT 2027 via Careers360, checked Oct 2026. NIFT dates not verified.'] },
+  // Added after the student interviews (Nov 2026). Only what a source supports; the rest stays an editorial estimate.
+  'company-secretary': {
+    salary: ['₹3–5 LPA (newly qualified)', 'Payscale India, Corporate Secretary: entry-level base ₹4.3 L (71 salaries, data from 2023); Taxscan quotes ₹3–5 L starting. No ICSI placement report found. Checked Nov 2026'],
+    exam: ['CSEET after Class 12; graduates skip it and start at CS Executive', 'ICSI Council decisions of 17–18 Mar 2026, via TaxGuru. icsi.edu was not reachable. Checked Nov 2026'],
+    cost: ['About ₹50k in ICSI fees, plus coaching', 'ICSI fees quoted on 2026–27 pages (about ₹50.5–54.5k); older pages say less. Not checked on icsi.edu. Checked Nov 2026'],
+    demand: ['Growing', 'ICSI president, Aug 2026, via The News Trust: about 80,600 members, and a need for over 1 lakh CS. This is ICSI’s own projection. Checked Nov 2026'],
+  },
+  lawyer: {
+    salary: ['₹1–8 LPA for most new graduates', 'Bar & Bench (2023): Chennai junior advocates ₹15–20k a month, some unpaid. Payscale India, Corporate Lawyer: entry-level ₹5.9 L (43 salaries, Mar 2026). Top law-school placements are far higher (aggregator-reported). Checked Nov 2026'],
+    exam: ['CLAT or similar for the 5-year LLB after Class 12; the Bar exam to practise', 'All India Bar Examination site (opened) for the Bar exam. CLAT details are from secondary pages, not checked on the Consortium of NLUs site. Checked Nov 2026'],
+    study: ['5 years after Class 12, or 3 years after a degree', 'All India Bar Examination eligibility: 3-year or 5-year LLB. Checked Nov 2026'],
+    cost: ['Up to ₹22 L at top law schools; lower elsewhere', 'NLSIU fee structure 2026–27 (Toprankers, Nov 2026): about ₹4.5 L a year including hostel. Other colleges not researched'],
+  },
+  accountant: {
+    salary: ['₹2–3.5 LPA', 'Payscale India, Accountant: entry-level average ₹2.3 L (247 salaries, updated Oct 2026). Checked Nov 2026'],
+  },
+  dietitian: {
+    salary: ['₹2–3.5 LPA', 'Payscale India, Dietitian: entry-level ₹2.0 L (40 salaries, Apr 2026); Nutritionist: ₹2.6 L (23, Mar 2025). Checked Nov 2026'],
+    exam: ['No national entrance exam. A Registered Dietitian needs a postgraduate qualification and an internship', 'Indian Dietetic Association, RD eligibility (idaindia.com, opened). B.Sc admission details are from secondary pages. Checked Nov 2026'],
+    study: ['B.Sc in Food and Nutrition (3 to 4 years); about 6 years to Registered Dietitian', 'Indian Dietetic Association, RD eligibility (opened) for the postgraduate and internship steps. The B.Sc length is from secondary pages. Checked Nov 2026'],
+  },
+  'fitness-trainer': {
+    salary: ['₹1.5–3.5 LPA', 'Payscale India, Personal Trainer: entry-level average ₹3.0 L (35 salaries, Feb 2026). Gym fresher pay quoted lower by fitness institutes, not checked. Checked Nov 2026'],
+    exam: ['None. A recognised fitness certificate is the usual route', 'National Qualification Register: General Fitness Trainer, NSQF Level 4 (nqr.gov.in, opened); REPS India register. Checked Nov 2026'],
+    study: ['A certificate course of about 450 hours; a B.P.Ed degree is optional', 'National Qualification Register: 450 notional hours (opened). B.P.Ed length is from secondary pages. Checked Nov 2026'],
+    cost: ['About ₹8k a year to register, plus course fees', 'REPS India registration ₹7,918 a year (repsindia.org, opened). Course fees not sourced. Checked Nov 2026'],
+    demand: ['Growing', 'Deloitte and Health & Fitness Association India fitness report 2025: market growing about 15% a year to about ₹37,700 crore by 2030 (opened). Checked Nov 2026'],
+  },
+  'sports-coach': {
+    salary: ['About ₹500–1,000 a session at the start; income depends on how many students you have', 'UrbanPro chess fees (₹300–500 an hour) and The Tribune, Jul 2024 (₹500–1,000 an hour for basics). Marketplace and press figures, low reliability; not a salary survey. Checked Nov 2026'],
+    exam: ['None to start. FIDE coach titles and the NIS diploma are optional', 'FIDE Trainers’ Commission (trainers.fide.com, opened): titles by a 16-hour seminar. NSNIS Patiala sports-coaching diploma (opened). Checked Nov 2026'],
+    study: ['No degree needed for chess; the NIS sports-coaching diploma is 1 year', 'NSNIS Patiala diploma in sports coaching (nsnis.org, opened). Checked Nov 2026'],
+    cost: ['A FIDE seminar costs up to about €350; the NIS diploma ₹63,800', 'FIDE seminar fees (trainers.fide.com) and NSNIS fee ₹63,800 (nsnis.org), both opened. Euro figure is not converted. Checked Nov 2026'],
+  },
 };
+
+// Second pass (16 Nov 2026): study, cost and demand for the ten most-viewed top-level roles. Only claims backed by a
+// page that was opened are listed; search-only figures stay editorial estimates. Several fee figures come from
+// education aggregator sites, and the source says so.
+const SECOND_PASS = {
+  doctor: {
+    cost: ['Government ₹0.1–5 L in total; private ₹7 L to over ₹1 Cr', 'FindMyCollege MBBS fee survey (aggregator): government ₹1,364 to ₹5 L, private ₹7 L to ₹1.35 Cr, median about ₹36 L. Checked Nov 2026'],
+    demand: ['Steady', 'Health Ministry reply in Rajya Sabha, Dec 2025 (via Medical Dialogues): 1 doctor per 811 people. MBBS seats have also grown sharply, so competition for jobs grows too. Checked Nov 2026'],
+  },
+  'software-dev': {
+    demand: ['Steady', 'Naukri JobSpeak, Oct 2026 (via Storyboard18): software and QA hiring up only 1% a year, while AI and ML roles grew 32%. Checked Nov 2026'],
+  },
+  ca: {
+    study: ['About 4.5–5 years including articleship', 'ICAI (ccg.icai.org): 2-year articleship; total length from secondary pages. Checked Nov 2026'],
+  },
+  'data-analyst': {
+    demand: ['Growing', 'India Skills Report 2026 (ETS, CII, AICTE; via Careers360): data analytics among the most in-demand skills. Checked Nov 2026'],
+  },
+  'financial-analyst': {
+    cost: ['₹1–30 L in total (a degree, plus an MBA if you take one)', 'IIM Ahmedabad PGP fee ₹27.5 L for 2025–27 (via Cracku, aggregator); degree fees from secondary pages. Checked Nov 2026'],
+    demand: ['Steady', 'Naukri JobSpeak, Oct 2026: banking and financial services hiring up 16% a year (one month, against a weak base). Checked Nov 2026'],
+  },
+  'digital-marketer': {
+    demand: ['Growing', 'TeamLease EdTech, via Open magazine: fresher hiring intent in marketing rose to 62% in the first half of 2026, from 11% a year earlier. Checked Nov 2026'],
+  },
+  'ux-designer': {
+    cost: ['Any degree plus a course ₹50k–5 L; a B.Des at NID about ₹19 L', 'NID Ahmedabad B.Des about ₹19.2 L for 4 years including hostel (via Toprankers, aggregator); course costs from secondary pages. Checked Nov 2026'],
+  },
+  nurse: {
+    study: ['B.Sc Nursing (4 years) or GNM diploma (3 years)', 'Indian Nursing Council, nursing programmes page. Checked Nov 2026'],
+    cost: ['Government ₹10k–1.5 L in total; private ₹2–12 L', 'Propelld B.Sc Nursing fee guide: government ₹7,000 to ₹1.5 L, private ₹50k–3 L a year. Checked Nov 2026'],
+    demand: ['Growing', 'Health Ministry reply in Rajya Sabha, Jul 2026 (via The South First): 2.6 nurses per 1,000 people, below the WHO benchmark of 3. Checked Nov 2026'],
+  },
+  'hr-manager': {
+    cost: ['₹2–35 L in total, mostly the HR MBA', 'TISS MA HRM about ₹2 L (via Cracku) and XLRI HRM about ₹30.6 L for 2025–27 (via Catmock), both aggregators. Checked Nov 2026'],
+  },
+  'product-manager': {
+    cost: ['₹1–10 L for the degree; ₹25–40 L with a top MBA', 'IIM Ahmedabad PGP fee ₹27.5 L (via Cracku, aggregator); degree fees from secondary pages. Checked Nov 2026'],
+  },
+};
+for (const [id, fields] of Object.entries(SECOND_PASS)) Object.assign((VERIFIED[id] ||= {}), fields);

@@ -4,7 +4,7 @@ import { useStore, useRole, useRoles, useOnline } from '../store';
 import { CAREER_MAP, CHILDREN, FIELD_KEYS } from '../data/careers';
 import { hasRoadmap } from '../data/roadmaps';
 import { hasLadder, ladderChain } from '../data/ladders';
-import { FIELDS } from '../lib/config';
+import { FEATURES, FIELDS } from '../lib/config';
 import { shareCard } from '../lib/share';
 import { FieldRow } from '../components/FieldRow';
 import { TopBar } from '../components/TopBar';
@@ -163,7 +163,7 @@ export default function CareerCard() {
         </section>
       )}
 
-      {hasRoadmap(id) ? (
+      {FEATURES.roadmaps && (hasRoadmap(id) ? (
         <Link to={`/roadmap/${id}`} className="cta-road"><span aria-hidden="true">🗺</span><span className="grow">See how to get here</span><span aria-hidden="true">→</span></Link>
       ) : (
         <div className="cta-road off stack" style={{ display: 'block' }}>
@@ -174,9 +174,9 @@ export default function CareerCard() {
             <p className="small" style={{ marginTop: 6 }}>Want to hear when it’s ready? <Link to="/settings">Turn on role updates</Link>.</p>
           )}
         </div>
-      )}
+      ))}
 
-      {hasLadder(id) && (
+      {hasLadder(id) && (FEATURES.ladders ? (
         <Link to={`/career/${id}/ladder`} className="card row" style={{ textDecoration: 'none', color: 'inherit' }}>
           <span style={{ fontSize: '1.5rem' }} aria-hidden="true">📈</span>
           <span className="grow">
@@ -185,7 +185,15 @@ export default function CareerCard() {
           </span>
           <span aria-hidden="true">→</span>
         </Link>
-      )}
+      ) : (
+        <div className="card row">
+          <span style={{ fontSize: '1.5rem' }} aria-hidden="true">📈</span>
+          <span className="grow">
+            <strong>How you can grow</strong>
+            <span className="small muted" style={{ display: 'block' }}>{ladderChain(id)}</span>
+          </span>
+        </div>
+      ))}
 
       <div className="row">
         <button className="btn grow" aria-pressed={inCompare} onClick={onCompare}>{inCompare ? '✓ In Compare' : '+ Compare'}</button>

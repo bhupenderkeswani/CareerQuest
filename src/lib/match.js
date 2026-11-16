@@ -16,6 +16,18 @@ export const VOCAB = {
   fields: ['tech', 'health', 'business'],
 };
 
+// What a student has already DONE counts as a signal of what they like. Each activity stands for a few of the same
+// interest tags the roles carry, so no role needs extra data. (Interviews: interests were found by doing, not by
+// answering a questionnaire.)
+export const TRIED = {
+  code: { label: 'coding or using computers beyond class', subjects: ['computers'], interests: ['tech'] },
+  accounts: { label: 'keeping accounts or helping in a business', subjects: ['commerce'], style: ['data'], interests: ['business'] },
+  teach: { label: 'teaching or coaching someone', style: ['people'], interests: ['helping'] },
+  sport: { label: 'training, sport, chess or fitness', style: ['hands', 'people'], interests: ['health'] },
+  make: { label: 'designing, drawing, editing or making content', style: ['creative'], interests: ['design'] },
+  lab: { label: 'experiments or practicals', subjects: ['science'], style: ['hands'] },
+};
+
 export const LABELS = {
   maths: 'maths', science: 'science', computers: 'computers', commerce: 'accounts and economics',
   languages: 'languages and writing', social: 'social science',
@@ -53,6 +65,20 @@ export function scoreRole(role, a) {
   let s = subjects.length * 2 + style.length * 2 + interests.length * 1.5;
   const gaps = [];
 
+  // Things already tried add a smaller, separate boost (once per matching tag, and not twice if the student also picked it).
+  const tried = [];
+  for (const key of a.tried || []) {
+    const m = TRIED[key];
+    if (!m) continue;
+    let n = 0;
+    for (const kind of ['subjects', 'style', 'interests']) {
+      for (const v of m[kind] || []) {
+        if ((t[kind] || []).includes(v) && !(a[kind] || []).includes(v)) n += 1;
+      }
+    }
+    if (n) { s += n * 1.2; tried.push(key); }
+  }
+
   const check = (need, have, weight, gap) => {
     if (have == null) return;
     if (need > have) { s -= (need - have) * weight; gaps.push(gap); } else s += 0.4;
@@ -64,7 +90,7 @@ export function scoreRole(role, a) {
 
   const avoided = (a.avoid || []).filter((f) => t.flags.includes(f));
   s -= avoided.length * 6;
-  return { s, subjects, style, interests, gaps, avoided };
+  return { s, subjects, style, interests, gaps, avoided, tried };
 }
 
 export function joinList(arr) {

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStore, useRoles } from '../store';
 import { CAREERS, CAREER_MAP } from '../data/careers';
-import { FIELDS } from '../lib/config';
+import { FEATURES, FIELDS } from '../lib/config';
 import { CareerTile } from '../components/CareerTile';
 
 // Round-robin across fields so no field, and no pay band, reads as ranked first.
@@ -43,20 +43,22 @@ export default function Explore() {
     <div className="stack-lg">
       <div className="row spread" style={{ paddingTop: 16 }}>
         <h1>Hi {user?.nickname || 'there'}</h1>
-        <button className="xp-chip" onClick={() => nav('/me')} aria-label={`${xp} XP. Open your profile`}>⚡ {xp} XP</button>
+        {FEATURES.rewards && <button className="xp-chip" onClick={() => nav('/me')} aria-label={`${xp} XP. Open your profile`}>⚡ {xp} XP</button>}
       </div>
 
       <Link to={top ? '/foryou' : '/quiz'} className="banner">
         <small>Roles worth exploring</small>
-        <strong>{top ? `Top pick for you: ${top.name}` : answered > 0 ? 'Continue your quiz →' : 'Take the 3-minute quiz →'}</strong>
+        <strong>{top ? `Top pick for you: ${top.name}` : answered > 0 ? 'Continue your quiz →' : 'Take the 4-minute quiz →'}</strong>
         <small>{top ? 'See all your picks and why they fit' : 'Get 3–5 roles with reasons, no wrong answers'}</small>
       </Link>
 
-      <Link to="/chat" className="card row" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <span style={{ fontSize: '1.5rem' }} aria-hidden="true">💬</span>
-        <span className="grow"><strong>Tell us what you want</strong><span className="small muted" style={{ display: 'block' }}>Say it in your own words, like “good at maths, want 20 lakh a year”</span></span>
-        <span aria-hidden="true">→</span>
-      </Link>
+      {FEATURES.chat && (
+        <Link to="/chat" className="card row" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <span style={{ fontSize: '1.5rem' }} aria-hidden="true">💬</span>
+          <span className="grow"><strong>Tell us what you want</strong><span className="small muted" style={{ display: 'block' }}>Say it in your own words, like “good at maths, want 20 lakh a year”</span></span>
+          <span aria-hidden="true">→</span>
+        </Link>
+      )}
 
       <div className="stack">
         <input className="field-input" type="search" placeholder="Search careers and specialisations" aria-label="Search careers and specialisations" value={q} onChange={(e) => setQ(e.target.value)} />

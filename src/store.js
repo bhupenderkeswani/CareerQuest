@@ -5,7 +5,7 @@ import { persist } from 'zustand/middleware';
 import { useEffect, useMemo, useState } from 'react';
 import { CAREER_MAP, TOP_SALARY_IDS } from './data/careers';
 import { SEED_QUEUE } from './data/admin';
-import { DAILY_CAP, XP_RULES, levelInfo } from './lib/config';
+import { DAILY_CAP, FEATURES, XP_RULES, levelInfo } from './lib/config';
 import { SYNC_KEYS } from './lib/sync';
 import { BADGES } from './lib/badges';
 import { track } from './lib/analytics';
@@ -65,7 +65,7 @@ export const useStore = create(
 
       // At most one soft account prompt per session, and only for guests (design principle 1).
       const maybePrompt = (kind) => {
-        if (get().user) return;
+        if (!FEATURES.accounts || get().user) return;
         try {
           if (sessionStorage.getItem('cq_prompted')) return;
           sessionStorage.setItem('cq_prompted', '1');
@@ -74,6 +74,7 @@ export const useStore = create(
       };
 
       const checkBadges = () => {
+        if (!FEATURES.rewards) return;
         const s = get();
         const next = { ...s.badges };
         const fresh = [];
@@ -92,6 +93,7 @@ export const useStore = create(
 
       // The XP engine. Returns XP actually granted. Repeats and capped actions are silent.
       const grant = (action, key = '') => {
+        if (!FEATURES.rewards) return 0;
         const s = get();
         const rule = XP_RULES[action];
         const date = today();
